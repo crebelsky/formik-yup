@@ -13,5 +13,5 @@ it("submits", () => {
   });
   form.find("button").simulate("submit");
 
-  expect(onSubmit).toBeCalledWith("asd");
+  expect(onSubmit).toBeCalled();
 });
