@@ -1,17 +1,35 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { shallow } from "enzyme";
+import { mount } from "enzyme";
 
-it("submits", () => {
+it("submits when email is correct", done => {
   const onSubmit = jest.fn();
-  const wrapper = shallow(<App onSubmit={onSubmit} />);
-  const form = wrapper.find("Formik").dive();
-  form.find('input[name="email"]').simulate("change", {
+  const wrapper = mount(<App onSubmit={onSubmit} />);
+
+  wrapper.find('input[name="email"]').simulate("change", {
     persist: jest.fn(),
     target: { name: "email", value: "john.doe@test.com" }
   });
-  form.find("button").simulate("submit");
+  wrapper.find("button").simulate("submit");
 
-  expect(onSubmit).toBeCalledWith("asd");
+  setTimeout(() => {
+    expect(onSubmit).toBeCalled();
+    done();
+  }, 0);
+});
+it("doesn't submit when email is incorrect", done => {
+  const onSubmit = jest.fn();
+  const wrapper = mount(<App onSubmit={onSubmit} />);
+
+  wrapper.find('input[name="email"]').simulate("change", {
+    persist: jest.fn(),
+    target: { name: "email", value: "john.doe.test.com" }
+  });
+  wrapper.find("button").simulate("submit");
+
+  setTimeout(() => {
+    expect(onSubmit).not.toBeCalled();
+    done();
+  }, 0);
 });
